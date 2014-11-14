@@ -1,9 +1,10 @@
 {
   "name": "xdLocalStorage",
   "version": "1.0.11",
-  "homepage": "https://github.com/ofirdagan/cross-domain-local-storage",
+  "homepage": "https://github.com/wingedfox/cross-domain-local-storage",
   "authors": [
-    "Ofir Dagan <ofirdagan@gmail.com>"
+    "Ofir Dagan <ofirdagan@gmail.com>",
+    "Ilya WingedFox Lebedev <ilya@lebedev.net>"
   ],
   "dependencies": {},
   "main": "scripts/xdLocalStorage.js",
