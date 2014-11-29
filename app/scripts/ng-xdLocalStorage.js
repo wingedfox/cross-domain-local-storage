@@ -11,13 +11,14 @@ angular.module('xdLocalStorage', [])
       xdLocalStorage.init(options);
       wasInit = true;
     };
+
     this.$get = function () {
       return {
-        setItem: function (key, value, callback) {
+        setItem: function (key, value) {
           if (!wasInit) {
             throw 'You must init xdLocalStorage in app config before use';
           }
-          xdLocalStorage.setItem(key, value, callback);
+          xdLocalStorage.setItem(key, value);
         },
         getItem: function (key, callback) {
           if (!wasInit) {
@@ -25,11 +26,11 @@ angular.module('xdLocalStorage', [])
           }
           xdLocalStorage.getItem(key, callback);
         },
-        removeItem: function (key, callback) {
+        removeItem: function (key) {
           if (!wasInit) {
             throw 'You must init xdLocalStorage in app config before use';
           }
-          xdLocalStorage.removeItem(key, callback);
+          xdLocalStorage.removeItem(key);
         },
         key: function (index, callback) {
           if (!wasInit) {
@@ -37,11 +38,17 @@ angular.module('xdLocalStorage', [])
           }
           xdLocalStorage.key(index, callback);
         },
-        clear: function (callback) {
+        clear: function () {
           if (!wasInit) {
             throw 'You must init xdLocalStorage in app config before use';
           }
-          xdLocalStorage.clear(callback);
+          xdLocalStorage.clear();
+        }
+        on: function (callback) {
+          if (!wasInit) {
+            throw 'You must init xdLocalStorage in app config before use';
+          }
+          xdLocalStorage.on();
         }
       };
     };
