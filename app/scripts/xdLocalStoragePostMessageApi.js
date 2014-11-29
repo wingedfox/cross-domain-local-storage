@@ -6,6 +6,7 @@
 (function () {
 
   var MESSAGE_NAMESPACE = 'cross-domain-local-message';
+  var STORAGE_KEY_PREFIX = '';
 
   var defaultData = {
     namespace: MESSAGE_NAMESPACE
@@ -27,17 +28,23 @@
   }
 
   function setData(id, key, value) {
+    var oldValue = localStorage.getItem(key);
     localStorage.setItem(key, value);
     var checkGet = localStorage.getItem(key);
     var data = {
-      success: checkGet === value
+      success: checkGet === value,
+      oldValue: oldValue
     };
     postData(id, data);
   }
 
   function removeData(id, key) {
+    var oldValue = localStorage.getItem(key);
     localStorage.removeItem(key);
-    postData(id, {});
+    var data = {
+        oldValue: oldValue
+    }
+    postData(id, data);
   }
 
   function getKey(id, index) {
@@ -45,9 +52,18 @@
     postData(id, {key: key});
   }
 
-  function clear(id) {
-    localStorage.clear();
-    postData(id, {});
+  function clear(id, key) {
+    var keys = [];
+    for (var i in localStorage) {
+        if (i.indexOf(key) === 0) {
+            keys.push({
+                key: i,
+                oldValue: localStorage.getItem(i)
+            });
+            localStorage.removeItem(i);
+        }
+    }
+    postData(id, keys);
   }
 
   function receiveMessage(event) {
@@ -67,15 +83,24 @@
       } else if (data.action === 'key') {
         getKey(data.id, data.key);
       } else if (data.action === 'clear') {
-        clear(data.id);
+        clear(data.id, data.key);
       }
     }
   }
 
+  function sendNotification(event) {
+    var data = {
+      data: event
+    };
+    postData('storage-event', data);
+  }
+
   if (window.addEventListener) {
     window.addEventListener('message', receiveMessage, false);
+    window.addEventListener('storage', sendNotification, false);
   } else {
     window.attachEvent('onmessage', receiveMessage);
+    window.attachEvent('storage', sendNotification);
   }
 
   function sendOnLoad() {
