@@ -90,7 +90,14 @@
 
   function sendNotification(event) {
     var data = {
-      data: event
+      data: {
+          key: event.key,
+          newValue: event.newValue,
+          oldValue: event.oldValue,
+          timeStamp: event.timeStamp,
+          type: event.type,
+          url: event.url
+      }
     };
     postData('storage-event', data);
   }
