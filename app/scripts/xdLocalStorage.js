@@ -103,7 +103,11 @@ window.xdLocalStorage = window.xdLocalStorage || (function () {
     var temp = document.createDocumentFragment();
     iframe = temp.ownerDocument.createElement('iframe');
     iframe.id = options.iframeId;
-    iframe.style = "position: absolute; left: -9999px; top: -9999px; width:0; height:0";
+    iframe.style.position = "absolute";
+    iframe.style.left = "-9999px";
+    iframe.style.top = "-9999px;"
+    iframe.style.width = "0";
+    iframe.style.height = "0";
     iframe.src = options.iframeUrl;
     temp.appendChild(iframe);
     document.body.appendChild(temp);
