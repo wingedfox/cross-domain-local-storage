@@ -89,6 +89,7 @@
   }
 
   function sendNotification(event) {
+    console.info('xdSendNotification', event)
     var data = {
       data: {
           key: event.key,
@@ -102,20 +103,50 @@
     postData('storage-event', data);
   }
 
+  var storagemap = {};
+  function fireStorageEvent(e,k,v) {
+    if(e) {
+      if (storagemap[e.key] != e.newValue) {
+        sendNotification (e);
+        storagemap[e.key] = e.newValue;
+      }
+    } else {
+      if (storagemap[k] != v) {
+        sendNotification ({
+          key: k,
+          oldValue: storagemap[k],
+          newValue: v
+        });
+        storagemap[k] = v;
+      }
+    }
+  }
+  
   if (window.addEventListener) {
     window.addEventListener('message', receiveMessage, false);
-    window.addEventListener('storage', sendNotification, false);
+    window.addEventListener('storage', fireStorageEvent, false);
   } else {
     window.attachEvent('onmessage', receiveMessage);
-    window.attachEvent('storage', sendNotification);
+    window.attachEvent('storage', fireStorageEvent);
   }
 
   function sendOnLoad() {
+    console.log('xdSendOnLoad');
     var data = {
       namespace: MESSAGE_NAMESPACE,
       id: 'iframe-ready'
     };
     parent.postMessage(JSON.stringify(data), '*');
+    for(var i=0;i<localStorage.length;i++){
+        storagemap[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+      }
+    setInterval(function(){
+        localStorage.setItem('xdLocalStorageRefreshToken',Math.random());
+        localStorage.removeItem('xdLocalStorageRefreshToken');
+        for(var i=0;i<localStorage.length;i++){
+            fireStorageEvent(null, localStorage.key(i), localStorage.getItem(localStorage.key(i)));
+        }
+    },500);
   }
   //on creation
   sendOnLoad();
