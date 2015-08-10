@@ -89,17 +89,19 @@
   }
 
   function sendNotification(event) {
-    var data = {
-      data: {
+    if (event.key !== 'xdLocalStorageRefreshToken') {
+      var data = {
+        data: {
           key: event.key,
           newValue: event.newValue,
           oldValue: event.oldValue,
           timeStamp: event.timeStamp,
           type: event.type,
           url: event.url
-      }
-    };
-    postData('storage-event', data);
+        }
+      };
+      postData('storage-event', data);
+    }
   }
 
   var storagemap = {};
