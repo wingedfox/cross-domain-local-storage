@@ -89,7 +89,6 @@
   }
 
   function sendNotification(event) {
-    console.info('xdSendNotification', event)
     var data = {
       data: {
           key: event.key,
@@ -131,7 +130,6 @@
   }
 
   function sendOnLoad() {
-    console.log('xdSendOnLoad');
     var data = {
       namespace: MESSAGE_NAMESPACE,
       id: 'iframe-ready'
